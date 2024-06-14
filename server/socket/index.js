@@ -9,12 +9,12 @@ const getConversation = require('../helpers/getConversation')
 const app = express()
 
 const server = http.createServer(app)
-const io = new Server(server,{
-    cors : {
-        origin : process.env.FRONTEND_URL,
-        credentials : true
-    }
-})
+const io = new Server(server, {
+  cors: {
+    origin: "https://linkup-1nps.onrender.com",
+    credentials: true,
+  },
+});
 
 
 const onlineUser = new Set()

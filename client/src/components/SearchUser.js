@@ -13,7 +13,7 @@ const SearchUser = ({onClose}) => {
 
 
     const handleSearchUser = async()=>{
-        const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-user`
+        const URL = `https://linkup-1nps.onrender.com/api/search-user`;
         try {
             setLoading(true)
             const response = await axios.post(URL,{
