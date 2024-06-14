@@ -45,7 +45,7 @@ const Home = () => {
 
   /***socket connection */
   useEffect(() => {
-    const socketConnection = io(process.env.REACT_APP_BACKEND_URL, {
+    const socketConnection = io("https://linkup-1nps.onrender.com", {
       auth: {
         token: localStorage.getItem("token"),
       },

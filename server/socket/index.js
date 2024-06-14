@@ -11,7 +11,7 @@ const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: "https://linkup-1nps.onrender.com",
+    origin: "http://localhost:3000",
     credentials: true,
   },
 });
