@@ -53,15 +53,13 @@ const CheckPasswordPage = () => {
         })
 
         toast.success(response.data.message)
-
         if(response.data.success){
             dispatch(setToken(response?.data?.token))
             localStorage.setItem('token',response?.data?.token)
-
             setData({
               password : "",
-            })
-            navigate('/')
+              })
+              navigate('/');
         }
     } catch (error) {
         toast.error(error?.response?.data?.message)
