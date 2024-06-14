@@ -2,58 +2,66 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { logout, setOnlineUser, setUser } from "../redux/userSlice";
+import {
+  logout,
+  setOnlineUser,
+  setSocketConnection,
+  setUser,
+} from "../redux/userSlice";
 import Sidebar from "../components/Sidebar";
 import logo from "../assets/logo.png";
-import { useSocket } from "../SocketContext";
+import io from "socket.io-client";
 
 const Home = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const socket = useSocket();
 
   console.log("user", user);
   const fetchUserDetails = async () => {
-  try {
-    const URL = `https://linkup-1nps.onrender.com/api/user-details`;
-    const response = await axios({
-      url: URL,
-      withCredentials: true,
-    });
+    try {
+      const URL = `https://linkup-1nps.onrender.com/api/user-details`;
+      const response = await axios({
+        url: URL,
+        withCredentials: true,
+      });
 
-    dispatch(setUser(response.data.data));
+      dispatch(setUser(response.data.data));
 
-    if (response.data.data.logout) {
-      dispatch(logout());
-      navigate("/email");
+      if (response.data.data.logout) {
+        dispatch(logout());
+        navigate("/email");
+      }
+      console.log("current user Details", response);
+    } catch (error) {
+      console.log("error", error);
     }
-    console.log("current user Details", response);
-  } catch (error) {
-    console.log("error", error);
-    dispatch(logout());
-    navigate("/email");
-  }
-};
-
+  };
 
   useEffect(() => {
     fetchUserDetails();
   }, []);
 
+  /***socket connection */
   useEffect(() => {
-    if (socket) {
-      socket.on("onlineUser", (data) => {
-        console.log(data);
-        dispatch(setOnlineUser(data));
-      });
+    const socketConnection = io("https://linkup-1nps.onrender.com", {
+      auth: {
+        token: localStorage.getItem("token"),
+      },
+    });
 
-      return () => {
-        socket.off("onlineUser");
-      };
-    }
-  }, [socket, dispatch]);
+    socketConnection.on("onlineUser", (data) => {
+      console.log(data);
+      dispatch(setOnlineUser(data));
+    });
+
+    dispatch(setSocketConnection(socketConnection));
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, []);
 
   const basePath = location.pathname === "/";
   return (
