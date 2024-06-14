@@ -14,9 +14,6 @@ router.post('/email',checkEmail)
 router.post('/password',checkPassword)
 router.get('/user-details',userDetails)
 router.get('/logout',logout)
-router.get('/sample',(req,res) => {
-    res.send("Hello");
-})
 router.post('/update-user',updateUserDetails)
 router.post("/search-user",searchUser)
 
